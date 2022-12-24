@@ -6,3 +6,4 @@
 2. [useEffect Hook](https://reactjs.org/docs/hooks-reference.html#useeffect)
 3. [useCallback Hook](https://reactjs.org/docs/hooks-reference.html#usecallback)
 4. [useRef Hook](https://reactjs.org/docs/hooks-reference.html#useref)
+5. [useReducer Hook](https://reactjs.org/docs/hooks-reference.html#usereducer)
