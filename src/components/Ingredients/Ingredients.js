@@ -33,9 +33,13 @@ const Ingredients = () => {
         });
     }
     const removeIngredientHandler = ingredientId => {
-        setUserIngredients(
-            prevState => prevState.filter(ingredient => ingredient.id !== ingredientId)
-        );
+        fetch(`https://react-http-25001-default-rtdb.europe-west1.firebasedatabase.app/ingredients/${ingredientId}.json`, {
+            method: "DELETE",
+        }).then(() => {
+            setUserIngredients(
+                prevState => prevState.filter(ingredient => ingredient.id !== ingredientId)
+            );
+        });
     }
 
     return (
