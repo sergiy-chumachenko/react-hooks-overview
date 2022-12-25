@@ -1,9 +1,9 @@
-import React, {useCallback, useEffect, useReducer} from 'react';
+import React, {useCallback, useEffect, useMemo, useReducer} from 'react';
 
 import IngredientForm from './IngredientForm';
 import Search from './Search';
-import IngredientList from "./IngredientList";
 import ErrorModal from "../UI/ErrorModal";
+import IngredientList from "./IngredientList";
 
 const ingredientReducer = (currentIngredients, action) => {
     switch (action.type) {
@@ -41,7 +41,7 @@ const Ingredients = () => {
     // const [error, setError] = useState('');
 
     useEffect(() => {
-        console.log('RENDERING', userIngredients)
+        console.log(`RENDERING Ingredients`);
     }, [userIngredients]);
 
     const filteredIngredientsHandler = useCallback((filteredIngredients) => {
@@ -53,7 +53,7 @@ const Ingredients = () => {
     }, []);
 
 
-    const addIngredientHandler = ingredient => {
+    const addIngredientHandler = useCallback(ingredient => {
         // setIsLoading(true);
         dispatchHttp({type: 'SEND'});
         fetch('https://react-http-25001-default-rtdb.europe-west1.firebasedatabase.app/ingredients.json', {
@@ -76,8 +76,8 @@ const Ingredients = () => {
                 ingredient: {id: data.name, ...ingredient}
             })
         });
-    }
-    const removeIngredientHandler = ingredientId => {
+    }, []);
+    const removeIngredientHandler = useCallback(ingredientId => {
         // setIsLoading(true);
         dispatchHttp({type: 'SEND'});
         fetch(`https://react-http-25001-default-rtdb.europe-west1.firebasedatabase.app/ingredients/${ingredientId}.json`, {
@@ -96,13 +96,20 @@ const Ingredients = () => {
             // setError('Something went wrong!');
             dispatchHttp({type: 'ERROR', errorMessage: "Something went wrong!"});
         });
-    }
 
-    const clearError = () => {
+    }, []);
+
+    const clearError = useCallback(() => {
         dispatchHttp({type: 'CLEAR'});
         // setError('');
         // setIsLoading(false);
-    };
+    }, []);
+
+    const ingredientList = useMemo(() => {
+        return (
+            <IngredientList ingredients={userIngredients} onRemoveItem={removeIngredientHandler}/>
+        )
+    }, [userIngredients, removeIngredientHandler]);
 
     return (
         <div className="App">
@@ -111,7 +118,7 @@ const Ingredients = () => {
 
             <section>
                 <Search onLoadIngredients={filteredIngredientsHandler}/>
-                <IngredientList ingredients={userIngredients} onRemoveItem={removeIngredientHandler}/>
+                {ingredientList}
             </section>
         </div>
     );
